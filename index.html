@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Porch to Post</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#0a0a0a;--gold:#c9a84c;--gold-light:#e8d5a3;--gold-dark:#a07830;
+    --cream:#f9f5ee;--border-light:#e0d8c8;--text:#1a1a1a;--muted:#555;--white:#fff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--cream);font-family:'Jost',sans-serif;font-weight:400;color:var(--text);min-height:100vh;font-size:16px;-webkit-text-size-adjust:100%;}
+
+  .header{background:var(--black);padding:20px;display:flex;align-items:center;gap:14px;}
+  .header-mark{width:40px;height:40px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .header-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--white);letter-spacing:0.06em;text-transform:uppercase;line-height:1;}
+  .header-sub{font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:5px;}
+
+  .hero{background:var(--black);padding:36px 20px 44px;text-align:center;}
+  .hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:400;color:var(--white);line-height:1.2;margin-bottom:16px;}
+  .hero-title em{font-style:italic;color:var(--gold-light);}
+  .hero-body{font-size:16px;font-weight:400;color:#fff;line-height:1.8;margin:0 auto 28px;max-width:300px;}
+  .hero-pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+  .hero-pill{font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.7);border:1px solid #444;padding:8px 14px;}
+
+  .form-wrap{padding:28px 20px 60px;max-width:480px;margin:0 auto;}
+  .section-title{font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border-light);}
+  .section-gap{margin-bottom:32px;}
+  .field{margin-bottom:20px;}
+  .field label{display:block;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .field input,.field textarea{width:100%;padding:16px 0;border:none;border-bottom:2px solid var(--border-light);background:transparent;font-family:'Jost',sans-serif;font-size:17px;font-weight:400;color:var(--text);outline:none;transition:border-color 0.2s;-webkit-appearance:none;border-radius:0;}
+  .field input:focus,.field textarea:focus{border-bottom-color:var(--gold);}
+  .field textarea{resize:none;height:80px;}
+  .phone-wrap{position:relative;}
+  .phone-prefix{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:17px;color:var(--muted);pointer-events:none;}
+  .phone-wrap input{padding-left:28px;}
+
+  .notice{border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:28px;font-size:14px;color:var(--muted);line-height:1.6;background:rgba(201,168,76,0.05);}
+  .notice strong{color:var(--text);font-weight:600;}
+
+  .carrier-card{border:1.5px solid var(--border-light);margin-bottom:10px;background:var(--white);border-radius:6px;overflow:hidden;transition:border-color 0.2s;}
+  .carrier-card.selected{border-color:var(--gold);}
+  .carrier-header{display:flex;align-items:center;padding:18px;cursor:pointer;user-select:none;gap:14px;min-height:64px;}
+  .carrier-checkbox{width:26px;height:26px;border:2px solid var(--border-light);border-radius:5px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+  .carrier-card.selected .carrier-checkbox{background:var(--black);border-color:var(--black);}
+  .carrier-checkbox svg{display:none;}
+  .carrier-card.selected .carrier-checkbox svg{display:block;}
+  .carrier-name{font-size:18px;font-weight:500;color:var(--text);}
+  .carrier-body{display:none;padding:4px 18px 18px;border-top:1.5px solid var(--border-light);background:#faf7f2;}
+  .carrier-card.selected .carrier-body{display:block;}
+  .carrier-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border-light);min-height:64px;}
+  .carrier-row:last-child{border-bottom:none;}
+  .carrier-row-label{font-size:15px;font-weight:400;color:var(--text);}
+  .carrier-row-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+
+  .counter{display:flex;align-items:center;gap:16px;}
+  .counter-btn{width:40px;height:40px;border:1.5px solid var(--border-light);border-radius:50%;background:var(--white);font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);transition:all 0.15s;flex-shrink:0;}
+  .counter-btn:active{background:var(--black);color:var(--gold);border-color:var(--black);}
+  .counter-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--black);min-width:24px;text-align:center;}
+
+  .amazon-note{font-size:14px;font-weight:300;color:var(--text);border-left:3px solid var(--gold);padding:12px 14px;margin:14px 0 6px;background:rgba(201,168,76,0.05);line-height:1.7;}
+  .amazon-note strong{font-weight:600;color:var(--black);}
+  .amazon-note a{color:var(--gold-dark);font-weight:500;text-decoration:none;}
+
+  .info-box{border:1.5px solid var(--gold);padding:18px;margin-bottom:24px;display:none;background:var(--white);border-radius:6px;}
+  .info-box.visible{display:block;}
+  .info-box-title{font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;}
+  .info-box-text{font-size:15px;font-weight:300;color:var(--text);line-height:1.8;}
+  .info-box-text a{color:var(--gold-dark);font-weight:500;text-decoration:none;}
+  .info-box-text strong{font-weight:600;}
+
+  .price-box{background:var(--black);padding:22px 20px 18px;margin-bottom:24px;border-radius:6px;}
+  .price-box-title{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+  .price-line{display:flex;justify-content:space-between;font-size:14px;font-weight:300;color:rgba(255,255,255,0.8);margin-bottom:8px;}
+  .price-line span:last-child{color:#fff;font-weight:400;}
+  .price-divider{border:none;border-top:1px solid #2a2a2a;margin:14px 0;}
+  .price-total-row{display:flex;justify-content:space-between;align-items:flex-end;}
+  .price-total-label{font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.7);}
+  .price-total-val{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:600;color:var(--gold);line-height:1;}
+  .price-note{font-size:12px;color:rgba(255,255,255,0.5);margin-top:12px;}
+
+  .submit-btn{width:100%;padding:22px;background:var(--black);color:var(--gold);border:1.5px solid var(--gold);font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;margin-top:8px;border-radius:6px;transition:all 0.2s;min-height:62px;}
+  .submit-btn:active{background:var(--gold);color:var(--black);}
+  .submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .terms{font-size:12px;font-weight:300;color:var(--muted);text-align:center;margin-top:18px;line-height:1.7;}
+
+  .success-screen{display:none;text-align:center;padding:60px 24px;}
+  .success-screen.active{display:block;}
+  .success-mark{width:68px;height:68px;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;border-radius:50%;}
+  .success-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:var(--black);margin-bottom:14px;}
+  .success-sub{font-size:16px;font-weight:300;color:var(--muted);line-height:1.8;}
+  .success-contact{border:1.5px solid var(--border-light);padding:18px;margin:24px 0;font-size:15px;color:var(--text);line-height:1.8;text-align:left;background:var(--white);border-radius:6px;}
+  .success-contact a{color:var(--gold-dark);font-weight:500;}
+  .success-email{border:1.5px solid var(--gold);padding:18px;margin:16px 0;font-size:15px;color:var(--text);line-height:1.8;text-align:left;background:var(--white);border-radius:6px;}
+  .success-email strong{font-weight:600;}
+  .success-email a{color:var(--gold-dark);font-weight:500;}
+  .success-again{padding:20px 36px;background:transparent;border:1.5px solid var(--black);border-radius:6px;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--black);cursor:pointer;margin-top:16px;min-height:62px;}
+
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:var(--gold);padding:14px 28px;font-size:14px;font-weight:500;letter-spacing:0.1em;z-index:999;transition:transform 0.3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;border:1px solid #333;border-radius:100px;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-mark">
+    <svg width="20" height="20" viewBox="0 0 44 44" fill="none">
+      <rect x="4" y="28" width="36" height="4" rx="1" fill="rgba(201,168,76,0.3)"/>
+      <rect x="10" y="22" width="24" height="4" rx="1" fill="rgba(201,168,76,0.6)"/>
+      <rect x="16" y="16" width="12" height="4" rx="1" fill="#c9a84c"/>
+      <line x1="28" y1="14" x2="38" y2="4" stroke="#c9a84c" stroke-width="2" stroke-linecap="round"/>
+      <polyline points="30,4 38,4 38,12" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div>
+    <div class="header-name">Porch to Post</div>
+    <div class="header-sub">Star Trail's Return Concierge</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Doorstep Pickup Service</div>
+  <div class="hero-title">Returns, <em>handled<br>for you.</em></div>
+  <div class="hero-body">Leave your returns on the porch by 7 AM. We handle drop-off and send confirmation when complete.</div>
+  <div class="hero-pills">
+    <div class="hero-pill">No lines</div>
+    <div class="hero-pill">No errands</div>
+    <div class="hero-pill">No extra stops</div>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div id="form-view">
+    <div class="section-gap">
+      <div class="section-title">Your Information</div>
+      <div class="field"><label>Full Name</label><input type="text" id="f-name" placeholder="First & last name" autocomplete="name"></div>
+      <div class="field"><label>Address</label><input type="text" id="f-addr" placeholder="Street address" autocomplete="street-address"></div>
+      <div class="field"><label>Phone Number</label><div class="phone-wrap"><span class="phone-prefix">+1</span><input type="tel" id="f-phone" placeholder="(555) 000-0000" autocomplete="tel"></div></div>
+    </div>
+
+    <div class="section-gap">
+      <div class="section-title">Package Details</div>
+
+      <div class="carrier-card" id="card-fedex">
+        <div class="carrier-header" onclick="toggleCarrier('fedex')"><div class="carrier-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,8.5 11,1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="carrier-name">FedEx</div></div>
+        <div class="carrier-body">
+          <div class="carrier-row"><div><div class="carrier-row-label">Regular Packages</div></div><div class="counter"><div class="counter-btn" onclick="adjust('fedex','regular',-1)">−</div><div class="counter-val" id="fedex-regular">1</div><div class="counter-btn" onclick="adjust('fedex','regular',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">XL Packages</div><div class="carrier-row-sub">Oversized or heavy · $10 each</div></div><div class="counter"><div class="counter-btn" onclick="adjust('fedex','xl',-1)">−</div><div class="counter-val" id="fedex-xl">0</div><div class="counter-btn" onclick="adjust('fedex','xl',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Labels to print</div><div class="carrier-row-sub">+$1 per label</div></div><div class="counter"><div class="counter-btn" onclick="adjust('fedex','label',-1)">−</div><div class="counter-val" id="fedex-label">0</div><div class="counter-btn" onclick="adjust('fedex','label',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Packaging service</div><div class="carrier-row-sub">Leave item in bag or box unsealed · +$5</div></div><div class="counter"><div class="counter-btn" onclick="adjust('fedex','pack',-1)">−</div><div class="counter-val" id="fedex-pack">0</div><div class="counter-btn" onclick="adjust('fedex','pack',1)">+</div></div></div>
+        </div>
+      </div>
+
+      <div class="carrier-card" id="card-ups">
+        <div class="carrier-header" onclick="toggleCarrier('ups')"><div class="carrier-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,8.5 11,1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="carrier-name">UPS</div></div>
+        <div class="carrier-body">
+          <div class="carrier-row"><div><div class="carrier-row-label">Regular Packages</div></div><div class="counter"><div class="counter-btn" onclick="adjust('ups','regular',-1)">−</div><div class="counter-val" id="ups-regular">1</div><div class="counter-btn" onclick="adjust('ups','regular',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">XL Packages</div><div class="carrier-row-sub">Oversized or heavy · $10 each</div></div><div class="counter"><div class="counter-btn" onclick="adjust('ups','xl',-1)">−</div><div class="counter-val" id="ups-xl">0</div><div class="counter-btn" onclick="adjust('ups','xl',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Labels to print</div><div class="carrier-row-sub">+$1 per label</div></div><div class="counter"><div class="counter-btn" onclick="adjust('ups','label',-1)">−</div><div class="counter-val" id="ups-label">0</div><div class="counter-btn" onclick="adjust('ups','label',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Packaging service</div><div class="carrier-row-sub">Leave item in bag or box unsealed · +$5</div></div><div class="counter"><div class="counter-btn" onclick="adjust('ups','pack',-1)">−</div><div class="counter-val" id="ups-pack">0</div><div class="counter-btn" onclick="adjust('ups','pack',1)">+</div></div></div>
+        </div>
+      </div>
+
+      <div class="carrier-card" id="card-usps">
+        <div class="carrier-header" onclick="toggleCarrier('usps')"><div class="carrier-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,8.5 11,1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="carrier-name">USPS</div></div>
+        <div class="carrier-body">
+          <div class="carrier-row"><div><div class="carrier-row-label">Regular Packages</div></div><div class="counter"><div class="counter-btn" onclick="adjust('usps','regular',-1)">−</div><div class="counter-val" id="usps-regular">1</div><div class="counter-btn" onclick="adjust('usps','regular',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">XL Packages</div><div class="carrier-row-sub">Oversized or heavy · $10 each</div></div><div class="counter"><div class="counter-btn" onclick="adjust('usps','xl',-1)">−</div><div class="counter-val" id="usps-xl">0</div><div class="counter-btn" onclick="adjust('usps','xl',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Labels to print</div><div class="carrier-row-sub">+$1 per label</div></div><div class="counter"><div class="counter-btn" onclick="adjust('usps','label',-1)">−</div><div class="counter-val" id="usps-label">0</div><div class="counter-btn" onclick="adjust('usps','label',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Packaging service</div><div class="carrier-row-sub">Leave item in bag or box unsealed · +$5</div></div><div class="counter"><div class="counter-btn" onclick="adjust('usps','pack',-1)">−</div><div class="counter-val" id="usps-pack">0</div><div class="counter-btn" onclick="adjust('usps','pack',1)">+</div></div></div>
+        </div>
+      </div>
+
+      <div class="carrier-card" id="card-amazon">
+        <div class="carrier-header" onclick="toggleCarrier('amazon')"><div class="carrier-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,8.5 11,1" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="carrier-name">Amazon Return</div></div>
+        <div class="carrier-body">
+          <div class="amazon-note">When processing your return on Amazon, <strong>select UPS as your drop-off location.</strong> Amazon will give you a QR code. Then either:<br><br><strong>1.</strong> Affix the QR code to the package before pickup<br><strong>2.</strong> Email it to <a href="mailto:porchtopost@gmail.com">porchtopost@gmail.com</a></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Packages</div></div><div class="counter"><div class="counter-btn" onclick="adjust('amazon','regular',-1)">−</div><div class="counter-val" id="amazon-regular">1</div><div class="counter-btn" onclick="adjust('amazon','regular',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">XL Packages</div><div class="carrier-row-sub">Oversized or heavy · $10 each</div></div><div class="counter"><div class="counter-btn" onclick="adjust('amazon','xl',-1)">−</div><div class="counter-val" id="amazon-xl">0</div><div class="counter-btn" onclick="adjust('amazon','xl',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Labels to print</div><div class="carrier-row-sub">+$1 per label</div></div><div class="counter"><div class="counter-btn" onclick="adjust('amazon','label',-1)">−</div><div class="counter-val" id="amazon-label">0</div><div class="counter-btn" onclick="adjust('amazon','label',1)">+</div></div></div>
+          <div class="carrier-row"><div><div class="carrier-row-label">Packaging service</div><div class="carrier-row-sub">Leave item in bag or box unsealed · +$5</div></div><div class="counter"><div class="counter-btn" onclick="adjust('amazon','pack',-1)">−</div><div class="counter-val" id="amazon-pack">0</div><div class="counter-btn" onclick="adjust('amazon','pack',1)">+</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" id="label-info">
+      <div class="info-box-title">Send Your Label</div>
+      <div class="info-box-text">Email your return label to:<br><strong><a href="mailto:porchtopost@gmail.com">porchtopost@gmail.com</a></strong><br><br>Subject: <strong>Your name + carrier</strong><br>Example: <em>"Jane Smith — FedEx Label"</em></div>
+    </div>
+
+    <div class="section-gap">
+      <div class="section-title">Special Instructions</div>
+      <div class="field"><label>Notes <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></label><textarea id="f-notes" placeholder="Gate code, package location, anything we should know..."></textarea></div>
+    </div>
+
+    <div class="notice">🏘 <strong>Star Trail Residents Only.</strong> This service is exclusively available to residents of Star Trail in Prosper, TX. Questions? Text <a href="tel:2143072227" style="color:var(--gold-dark);font-weight:600;">(214) 307-2227</a></div>
+
+    <div class="price-box" id="price-box" style="display:none">
+      <div class="price-box-title">Estimated Total</div>
+      <div id="price-breakdown"></div>
+      <hr class="price-divider">
+      <div class="price-total-row"><div class="price-total-label">Total Due After Drop-Off</div><div class="price-total-val" id="price-total">$0</div></div>
+      <div class="price-note">Payment via Venmo or Zelle upon confirmation</div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitRequest()">Request Pickup</button>
+    <div class="terms">By submitting, you agree that Porch to Post is responsible for your package from doorstep pickup to carrier drop-off only. Once a carrier receipt is issued, all liability transfers to the carrier.</div>
+  </div>
+
+  <div id="success-view" class="success-screen">
+    <div class="success-mark"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><polyline points="4,12 9,17 20,6" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="success-title">Request received.</div>
+    <div class="success-sub">Leave your packages on the porch by 7 AM.<br>Orders after 7 AM are picked up next morning.<br>You'll get a confirmation text after drop-off.</div>
+    <div class="success-contact">
+      <strong>Questions?</strong><br>
+      Text <a href="tel:2143072227">(214) 307-2227</a> or email <a href="mailto:porchtopost@gmail.com">porchtopost@gmail.com</a>
+    </div>
+    <div class="success-email" id="success-label-reminder" style="display:none">
+      <strong>Don't forget your label.</strong><br>
+      Email it to <a href="mailto:porchtopost@gmail.com">porchtopost@gmail.com</a><br>
+      Subject: Your name + carrier
+    </div>
+    <button class="success-again" onclick="resetForm()">Submit Another Request</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const CARRIERS=['fedex','ups','usps','amazon'];
+  const state={
+    fedex:{selected:false,regular:1,xl:0,label:0,pack:0},
+    ups:{selected:false,regular:1,xl:0,label:0,pack:0},
+    usps:{selected:false,regular:1,xl:0,label:0,pack:0},
+    amazon:{selected:false,regular:1,xl:0,label:0,pack:0}
+  };
+
+  function toggleCarrier(c){state[c].selected=!state[c].selected;document.getElementById('card-'+c).classList.toggle('selected',state[c].selected);checkLabelBox();updatePrice();}
+  function adjust(c,type,delta){state[c][type]=Math.max(type==='regular'?1:0,state[c][type]+delta);document.getElementById(c+'-'+type).textContent=state[c][type];checkLabelBox();updatePrice();}
+  function checkLabelBox(){const needs=CARRIERS.some(c=>state[c].selected&&state[c].label>0);document.getElementById('label-info').classList.toggle('visible',needs);}
+
+  function updatePrice(){
+    const sel=CARRIERS.filter(c=>state[c].selected);
+    const box=document.getElementById('price-box');
+    if(!sel.length){box.style.display='none';return;}
+    box.style.display='block';
+    let total=0,lines=[],pkgCount=0;
+    sel.forEach(c=>{
+      const s=state[c],name=c==='amazon'?'Amazon → UPS':c.toUpperCase();
+      if(s.regular>0){let cost=0;for(let i=0;i<s.regular;i++){cost+=(pkgCount===0)?5:3;pkgCount++;}lines.push({label:`${name} — ${s.regular} pkg${s.regular>1?'s':''}`,amt:cost});total+=cost;}
+      if(s.xl>0){lines.push({label:`${name} — ${s.xl} XL`,amt:s.xl*10});total+=s.xl*10;}
+      if(s.label>0){lines.push({label:`${name} — ${s.label} label${s.label>1?'s':''}`,amt:s.label});total+=s.label;}
+      if(s.pack>0){lines.push({label:`${name} — packaging ×${s.pack}`,amt:s.pack*5});total+=s.pack*5;}
+    });
+    document.getElementById('price-breakdown').innerHTML=lines.map(l=>`<div class="price-line"><span>${l.label}</span><span>$${l.amt}</span></div>`).join('');
+    document.getElementById('price-total').textContent='$'+total;
+  }
+
+  async function submitRequest(){
+    const name=document.getElementById('f-name').value.trim();
+    const addr=document.getElementById('f-addr').value.trim();
+    const phone=document.getElementById('f-phone').value.trim();
+    const notes=document.getElementById('f-notes').value.trim();
+    const sel=CARRIERS.filter(c=>state[c].selected);
+
+    if(!name||!addr||!phone){showToast('Please fill in name, address & phone');return;}
+    if(!sel.length){showToast('Please select at least one carrier');return;}
+
+    const carrierDetails=sel.map(c=>({
+      carrier:c==='amazon'?'Amazon → UPS':c.toUpperCase(),
+      regular:state[c].regular,xl:state[c].xl,
+      label:state[c].label,pack:state[c].pack
+    }));
+    const needsLabel=carrierDetails.some(c=>c.label>0);
+
+    const carrierSummary=carrierDetails.map(c=>
+      `${c.carrier}: ${c.regular} pkg${c.regular>1?'s':''}${c.xl>0?` + ${c.xl} XL`:''}${c.label>0?` + ${c.label} label`:''}${c.pack>0?` + ${c.pack} pack`:''}`
+    ).join(' | ');
+
+    const btn=document.getElementById('submit-btn');
+    btn.disabled=true;
+    btn.textContent='Sending...';
+
+    try {
+      const res = await fetch('https://formspree.io/f/mlgyppeb', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          _subject: `📦 New Pickup Request — ${name}`,
+          name, address:addr, phone,
+          carriers: carrierSummary,
+          needs_label: needsLabel?'Yes — will email label':'No',
+          notes: notes||'None',
+          submitted: new Date().toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'})
+        })
+      });
+
+      if(res.ok){
+        document.getElementById('success-label-reminder').style.display=needsLabel?'block':'none';
+        document.getElementById('form-view').style.display='none';
+        document.getElementById('success-view').classList.add('active');
+      } else {
+        showToast('Something went wrong. Please try again.');
+        btn.disabled=false;
+        btn.textContent='Request Pickup';
+      }
+    } catch(e){
+      showToast('Something went wrong. Please try again.');
+      btn.disabled=false;
+      btn.textContent='Request Pickup';
+    }
+  }
+
+  function resetForm(){
+    ['f-name','f-addr','f-phone','f-notes'].forEach(id=>document.getElementById(id).value='');
+    CARRIERS.forEach(c=>{
+      state[c]={selected:false,regular:1,xl:0,label:0,pack:0};
+      document.getElementById('card-'+c).classList.remove('selected');
+      ['regular','xl','label','pack'].forEach(t=>{const el=document.getElementById(c+'-'+t);if(el)el.textContent=(t==='regular'?1:0);});
+    });
+    document.getElementById('label-info').classList.remove('visible');
+    document.getElementById('price-box').style.display='none';
+    document.getElementById('form-view').style.display='block';
+    document.getElementById('success-view').classList.remove('active');
+    const btn=document.getElementById('submit-btn');
+    btn.disabled=false;btn.textContent='Request Pickup';
+  }
+
+  function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+</script>
+</body>
+</html>
